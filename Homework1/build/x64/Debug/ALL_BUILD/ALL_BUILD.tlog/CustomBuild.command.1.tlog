@@ -1,0 +1,10 @@
+^C:\USERS\27628\DESKTOP\VR-2025FALL\HW01\HOMEWORK1\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/27628/Desktop/VR-2025fall/hw01/Homework1 -BC:/Users/27628/Desktop/VR-2025fall/hw01/Homework1/build --check-stamp-file C:/Users/27628/Desktop/VR-2025fall/hw01/Homework1/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
