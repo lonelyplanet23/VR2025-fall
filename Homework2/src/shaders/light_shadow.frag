@@ -27,6 +27,7 @@ in VS_OUT {
 float ShadowCalculation(vec4 fragPosLightSpace)
 {
 	// TODO 2.2.2 : Complete the following shadow mapping calculations
+	
 
 	return 0;
 }
@@ -34,7 +35,8 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 void main() {
 	vec3 color = texture(color_texture, vs_out.TexCoord).rgb;
 
-	vec4 fragPosLightSpace = light_space_matrix * vec4(vs_out.WorldPos, 1.0);
+	//* 将片元坐标转换到光源空间坐标系下
+	vec4 fragPosLightSpace = light_space_matrix * vec4(vs_out.WorldPos, 1.0); 
 
 	// TODO 2.2.1 : Complete the following shadow mapping calculations
 
@@ -47,4 +49,7 @@ void main() {
 
 	// TODO 2.2.1 : Modify the output of frag color
 	FragColor = vec4(color, 1.0);
+	
+
+	
 }
