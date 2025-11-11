@@ -111,12 +111,12 @@ int main(int argc, char **argv) {
     Shader shadow_shader(SHADER_DIR"/p3.vert", SHADER_DIR"/empty.frag");
 
     float ambient = 0.2f;
-    float specular = 0.8f;
+    float specular = 0.3f;
     auto light_pos = vecf3(0.0f, 10.0f, 0.0f);
     light_shader.set_tex("color_texture", 0);
     light_shader.set_tex("shadow_map", 1);
     light_shader.set_vecf3("point_light_pos", light_pos);
-    light_shader.set_vecf3("point_light_radiance", {200, 200, 200});
+    light_shader.set_vecf3("point_light_radiance", {10, 10, 10});
     light_shader.set_float("ambient", ambient);
     light_shader.set_float("specular", specular);
     
@@ -168,10 +168,22 @@ int main(int argc, char **argv) {
         glClear(GL_DEPTH_BUFFER_BIT);
 
         // TODO 2.2.2 : Uncomment the following segment, then modify the light_projection and light_view implementations yourself.
-         auto light_projection = matf4::Identity();
-         auto light_view = matf4::Identity();
+        vecf3 light_target = vecf3(0.0f, 0.0f, 0.0f);
+        vecf3 light_up = vecf3(0.0f, 0.0f, -1.0f);
+        float near_plane = 1.0f;
+        float far_plane = 20.0f;
+        float fov_y = 20.0f;
+        float aspect = 10.0f;
+        bool is_ortho = true;
+        float ortho_size = 10.0f;
+
+        
+         auto light_projection = is_ortho ? 
+            Utils::Transform::orthographic(ortho_size, ortho_size, near_plane, far_plane) :
+            Utils::Transform::perspective(to_radian(fov_y), aspect, near_plane, far_plane);
+         auto light_view = look_at(light_pos, light_target, light_up);
          auto light_space_matrix = light_projection * light_view;
-        /*
+        
         shadow_shader.set_matf4("projection", light_projection);
         shadow_shader.set_matf4("view", light_view);
 
@@ -185,7 +197,7 @@ int main(int argc, char **argv) {
 
         shadow_shader.set_matf4("model", plane_transform);
         plane_model->va->draw(shadow_shader);
-        */
+        
         FrameBuffer::bind_reset();
 
         /////////////////////////////////////////////////

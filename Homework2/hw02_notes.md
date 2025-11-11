@@ -127,8 +127,33 @@ $$ M_{persp->ortho} = \begin{bmatrix} n& 0& 0& 0\\ 0& n& 0& 0\\ 0& 0& n+f& -nf\\
       + 对应的旋转矩阵的逆为
       + $$R^{-1} = \begin{bmatrix} x_{x} & y_{x} & z_{x} & 0\\ x_{y} & y_{y} & z_{y} & 0\\ x_{z} & y_{z} & z_{z} & 0\\ 0 & 0 & 0 & 1 \end{bmatrix}$$
       + 所以 $$R = \begin{bmatrix} x_{x} & x_{y} & x_{z} & 0\\ y_{x} & y_{y} & y_{z} & 0\\ z_{x} & z_{y} & z_{z} & 0\\ 0 & 0 & 0 & 1 \end{bmatrix}$$
-  
 
+## Shading and Shadow Mapping 
+### Phong Reflection Model
++ 三个参数
+  + Ambient: 环境光
+  + Diffuse: 漫反射
+  + Specular: 镜面反射
++ **计算公式**
++ $$ I = I_{ambient} + I_{diffuse} + I_{specular} $$
+  $$ I_{ambient} = k_{a} \cdot I_{light} $$
+  $$ I_{diffuse} = k_{d} \cdot I_{light} \cdot max(0, L \cdot N) $$ 
+  $$ I_{specular} = k_{s} \cdot I_{light} \cdot max(0, R \cdot V)^{\alpha} $$
+    + 其中$R$为反射向量，$V$为视线向量，$\alpha$为高光系数
++ 实际计算时，将光强作用于color向量上，即
+  $$ color = I_{ambient} \cdot color + I_{diffuse} \cdot color + I_{specular} \cdot color $$    
+
+
+### Debug
+1. glsl语言的一些注意点
+2. 点积计算时，注意向量的方向
+3. **阴影边缘过硬 、存在阴影 acne（表面斑点状阴影） ****
+   阴影计算时，直接比较深度值，用固定值epsilon进行误差修正，最终值仅仅为1或0，导致阴影边缘过硬
+   + 解决方案：使用PCF（Percentage Closer Filtering）进行采样，使用3x3的采样核，对阴影值进行平均，得到一个[0,1]之间的阴影值，从而柔化阴影边缘
+4. **光亮部分仍然纯白**
+    + 方案1：调整光源辐射率，降低光源强度，未成功
+    + 方案2：调整漫反射和镜面反射的系数，主动添加一个系数（因为没有专门的漫反射参数，只有辐射强度），成功，不是纯白了，有层次了。
+   
 参考资料
 1. Games101
 2. https://www.tutorialspoint.com/computer_graphics/computer_graphics_perspective_projection.htm
@@ -136,3 +161,4 @@ $$ M_{persp->ortho} = \begin{bmatrix} n& 0& 0& 0\\ 0& n& 0& 0\\ 0& 0& n+f& -nf\\
 3. 3D数学基础：图形与游戏开发（第二版）
 4. https://www.3dgep.com/understanding-the-view-matrix/
 5. EigaChineseDocument https://github.com/qixianyu-buaa/EigenChineseDocument/tree/master/Eigen
+6. https://www.cnblogs.com/straywriter/articles/15599895.html
