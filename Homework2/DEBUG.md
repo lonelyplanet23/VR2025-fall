@@ -124,7 +124,7 @@ TextureDebugger::TextureDebugger() {
         {-1.0f, -1.0f, 0.0f},  // 左下角
         {-1.0f,  1.0f, 0.0f}   // 左上角
     };
-    std::vector<vecf2> texcoords = {
+    std::vector<vecf2> texcoords = {    
         {1.0f, 1.0f}, 
         {1.0f, 0.0f}, 
         {0.0f, 0.0f},
@@ -208,8 +208,8 @@ void TextureDebugger::render(const Utils::GL::Texture2D& texture_to_debug) {
         // render shadow map
         // 渲染 shadow map 这部分逻辑需要保留
 
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // debugger 调用
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            // debugger 调用
         glViewport(0, 0, SCR_HEIGHT, SCR_HEIGHT);
         texture_debugger->render(shadow_map);
 

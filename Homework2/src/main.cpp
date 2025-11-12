@@ -20,6 +20,7 @@
 #include "utils/gl/core.h"
 #include "utils/gl/texture.h"
 #include "utils/gl/frame_buffer.h"
+#include "utils/texture_debugger.h"
 
 using Utils::Camera;
 using Utils::Shader;
@@ -30,6 +31,7 @@ using Utils::Transform::generate_model_matrix;
 using Utils::Transform::look_at;
 using Utils::Transform::perspective;
 using Utils::Transform::rotate_with;
+
 
 // declare callbacks
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -151,6 +153,9 @@ int main(int argc, char **argv) {
     glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, vecf4(1.0f, 1.0f, 1.0f, 1.0f).data());
     FrameBuffer shadow_fbo;
     shadow_fbo.attach(GL_DEPTH_ATTACHMENT, &shadow_map);
+    // // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	// // debugger 初始化
+    // auto texture_debugger = std::make_unique<TextureDebugger>();
 
     while (!glfwWindowShouldClose(window)) {
         // record time
@@ -167,15 +172,15 @@ int main(int argc, char **argv) {
         glViewport(0, 0, SHADOW_TEXTURE_SIZE, SHADOW_TEXTURE_SIZE);
         glClear(GL_DEPTH_BUFFER_BIT);
 
-        // TODO 2.2.2 : Uncomment the following segment, then modify the light_projection and light_view implementations yourself.
+        // // TODO 2.2.2 : Uncomment the following segment, then modify the light_projection and light_view implementations yourself.
         vecf3 light_target = vecf3(0.0f, 0.0f, 0.0f);
         vecf3 light_up = vecf3(0.0f, 0.0f, -1.0f);
         float near_plane = 1.0f;
-        float far_plane = 20.0f;
+        float far_plane = 40.0f;    
         float fov_y = 20.0f;
         float aspect = 10.0f;
         bool is_ortho = true;
-        float ortho_size = 10.0f;
+        float ortho_size = 20.0f;
 
         
          auto light_projection = is_ortho ? 
@@ -200,7 +205,7 @@ int main(int argc, char **argv) {
         
         FrameBuffer::bind_reset();
 
-        /////////////////////////////////////////////////
+        // /////////////////////////////////////////////////
         // render light
         glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
         glClearColor(ambient, ambient, ambient, 1.0f);
@@ -230,6 +235,11 @@ int main(int argc, char **argv) {
         plane_model->va->draw(light_shader);
 
 		draw_imgui(view_mat, proj_mat);
+        
+        // // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // // debugger 调用
+        // glViewport(0, 0, SCR_HEIGHT, SCR_HEIGHT);
+        // texture_debugger->render(shadow_map);
 
         // show
         glfwSwapBuffers(window);

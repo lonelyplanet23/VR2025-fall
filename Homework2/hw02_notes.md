@@ -4,15 +4,15 @@
 ## MVP transformation
 **Model View Projection**
 
-### Model transf
+### Model transfermation
 **Scaling: 缩放**
 
 $$
 S = \begin{bmatrix}
- S_{x}&  0&  0& 0\\ 
- 0&  S_{y}&  0& 0\\ 
- 0& 0&  S_{z}& 0\\ 
- 0&  0&  0& 1
+S_{x}&  0&  0& 0\\ 
+0&  S_{y}&  0& 0\\ 
+0& 0&  S_{z}& 0\\ 
+0&  0&  0& 1
 \end{bmatrix}
 $$
 
@@ -22,10 +22,10 @@ $$
 
 $$
 T = \begin{bmatrix}
- 1& 0&  0& 0\\ 
- 0&  1& 0& 0\\ 
- 0&  0&  1& 0\\ 
- t_{x}& t_{y}&  t_{z}& 1\\
+1& 0&  0& 0\\ 
+0&  1& 0& 0\\ 
+0&  0&  1& 0\\ 
+t_{x}& t_{y}&  t_{z}& 1\\
 \end{bmatrix}
 $$
 
@@ -34,22 +34,22 @@ $$
 
 $$
 R_{x}(\theta) = \begin{bmatrix}
- 1& 0&  0& 0\\ 
- 0&  cos\theta & −sin\theta& 0\\ 
- 0&  sin\theta &  cos\theta& 0\\ 
- 0& 0&  0& 1\\
+1& 0&  0& 0\\ 
+0&  cos\theta & −sin\theta& 0\\ 
+0&  sin\theta &  cos\theta& 0\\ 
+0& 0&  0& 1\\
 \end{bmatrix}
 R_{y}(\theta) = \begin{bmatrix}
- cos\theta& 0&  sin\theta& 0\\ 
- 0&  1& 0& 0\\ 
- −sin\theta&  0&  cos\theta& 0\\ 
- 0& 0&  0& 1\\
+cos\theta& 0&  sin\theta& 0\\ 
+0&  1& 0& 0\\ 
+−sin\theta&  0&  cos\theta& 0\\ 
+0& 0&  0& 1\\
 \end{bmatrix}
 R_{z}(\theta) =\begin{bmatrix}
- cos\theta &  −sin\theta &  0& 0\\ 
- sin\theta &  cos\theta &  0& 0\\ 
- 0& 0&  1& 0\\ 
- 0&  0&  0& 1
+cos\theta &  −sin\theta &  0& 0\\ 
+sin\theta &  cos\theta &  0& 0\\ 
+0& 0&  1& 0\\ 
+0&  0&  0& 1
 \end{bmatrix}
 $$
 
@@ -57,11 +57,11 @@ $$
 
 1. camera: Position $\overrightarrow{e}$ + look-at direction$\overrightarrow{g}$ + up direction$\overrightarrow{t}$
 2. We always transform the camera to the **origin**
-   
+  
 3. 将e平移到原点
 4. 将g 旋转到-Z，t旋转到Y，(g × t)旋转到X
-       + 容易得到逆变换（-Z,Y,X旋转到..），再求逆即可。
-       + 而由于旋转矩阵是正交矩阵，因此其逆就是它的转置
+      + 容易得到逆变换（-Z,Y,X旋转到..），再求逆即可。
+      + 而由于旋转矩阵是正交矩阵，因此其逆就是它的转置
 
 ### Projection Transformation
 
@@ -78,8 +78,8 @@ $$
 + **方法**
     1. 立方体的定义$[left,right] \cdot [bottom, left] \cdot [far, near]$ 注意Z轴上是先大后小
     2. 将一个立方体映射到$[-1,1]^{3}$标准立方体上
-       1. 先平移到原点  $$\begin{bmatrix} 1& 0& 0& -\frac{left+right}{2}\\ 0& 1& 0& -\frac{bottom+top}{2}\\ 0& 0& 1& -\frac{near+far}{2}\\ 0& 0& 0& 1 \end{bmatrix}$$
-       2. 缩放到边长为2 $$\begin{bmatrix} \frac{2}{right-left}& 0& 0& 0\\ 0& \frac{2}{top-bottom}& 0& 0\\ 0& 0& \frac{2}{near-far}& 0\\ 0& 0& 0& 1 \end{bmatrix}$$
+      1. 先平移到原点  $$\begin{bmatrix} 1& 0& 0& -\frac{left+right}{2}\\ 0& 1& 0& -\frac{bottom+top}{2}\\ 0& 0& 1& -\frac{near+far}{2}\\ 0& 0& 0& 1 \end{bmatrix}$$
+      2. 缩放到边长为2 $$\begin{bmatrix} \frac{2}{right-left}& 0& 0& 0\\ 0& \frac{2}{top-bottom}& 0& 0\\ 0& 0& \frac{2}{near-far}& 0\\ 0& 0& 0& 1 \end{bmatrix}$$
     3. 合并得到最终的正交投影矩阵
 
 ### **视角投影**
@@ -116,8 +116,8 @@ $$ M_{persp->ortho} = \begin{bmatrix} n& 0& 0& 0\\ 0& n& 0& 0\\ 0& 0& n+f& -nf\\
 ## DEBUG MVP
 
 1. **当鼠标上下移动时视角出现问题，仿佛像是把一个纸片向下翻或者向上翻**
-   1. 定位问题：look_at 中，up 向量（或者 pitch 旋转）出现了错误，
-   2. 解决方案：
+  1. 定位问题：look_at 中，up 向量（或者 pitch 旋转）出现了错误，
+  2. 解决方案：
       +  **重新梳理Look at的逻辑：先将Camera移动到原点，再将Camera的三个方向移动到对应的轴，**
       + 注意 **OpenGL中是右手系，而且列向量，看网上教程需注意**
       + 为了减少计算错误，先计算Z轴方向，再用已知轴去叉乘
@@ -130,6 +130,7 @@ $$ M_{persp->ortho} = \begin{bmatrix} n& 0& 0& 0\\ 0& n& 0& 0\\ 0& 0& n+f& -nf\\
 
 ## Shading and Shadow Mapping 
 ### Phong Reflection Model
+![phong shading](assets/image-7.png)
 + 三个参数
   + Ambient: 环境光
   + Diffuse: 漫反射
@@ -144,16 +145,27 @@ $$ M_{persp->ortho} = \begin{bmatrix} n& 0& 0& 0\\ 0& n& 0& 0\\ 0& 0& n+f& -nf\\
   $$ color = I_{ambient} \cdot color + I_{diffuse} \cdot color + I_{specular} \cdot color $$    
 
 
-### Debug
+### Debug Shading
 1. glsl语言的一些注意点
 2. 点积计算时，注意向量的方向
+  
 3. **阴影边缘过硬 、存在阴影 acne（表面斑点状阴影） ****
-   阴影计算时，直接比较深度值，用固定值epsilon进行误差修正，最终值仅仅为1或0，导致阴影边缘过硬
-   + 解决方案：使用PCF（Percentage Closer Filtering）进行采样，使用3x3的采样核，对阴影值进行平均，得到一个[0,1]之间的阴影值，从而柔化阴影边缘
+  阴影计算时，直接比较深度值，用固定值epsilon进行误差修正，最终值仅仅为1或0，导致阴影边缘过硬
+  + 解决方案1：使用PCF（Percentage Closer Filtering）进行采样，使用3x3的采样核，对阴影值进行平均，得到一个[0,1]之间的阴影值，从而柔化阴影边缘
+  + 解决方案2：动态偏移（Slope-Scaled Bias），根据光线与法线的夹角动态调整偏移值，减少阴影acne
 4. **光亮部分仍然纯白**
     + 方案1：调整光源辐射率，降低光源强度，未成功
-    + 方案2：调整漫反射和镜面反射的系数，主动添加一个系数（因为没有专门的漫反射参数，只有辐射强度），成功，不是纯白了，有层次了。
-   
+    + 方案2：调整漫反射和镜面反射的系数，主动添加一个0.3系数（因为没有专门的漫反射参数，只有辐射强度），成功，不是纯白了，有层次了。
+
+### Extra:修改光的颜色
+只需要将light_color变量修改为一个有颜色的向量即可，例如红色系
+
+![颜色](assets/image-8.png)
+
+### Texture Debugger 实现
+
+**目前未完全实现，贴图显示纯黑，经检查应当是着色器未正常处理，但没有修复好**
+  
 参考资料
 1. Games101
 2. https://www.tutorialspoint.com/computer_graphics/computer_graphics_perspective_projection.htm
